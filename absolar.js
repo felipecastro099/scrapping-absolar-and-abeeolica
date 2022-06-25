@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const url = 'https://www.absolar.org.br/nossos-associados/';
+const ObjectsToCsv = require('objects-to-csv');
 
 fetchData(url).then((res) => {
     const html = res.data
@@ -21,7 +22,10 @@ fetchData(url).then((res) => {
         })
     })
 
-    associados.forEach((item) => console.log(item))
+    const csv = new ObjectsToCsv(associados);
+    
+
+    csv.toDisk('./absolar.csv');
 })
 
 async function fetchData(url){

@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const url = 'https://abeeolica.org.br/nossos-associados/';
+const ObjectsToCsv = require('objects-to-csv');
 
 fetchData(url).then((res) => {
     const html = res.data
@@ -9,7 +10,7 @@ fetchData(url).then((res) => {
 
     const associados = [];
 
-    $('.associados > li').each(function(item){
+    $('.associados > li').toArray().forEach(function(item){
         associados.push({
             category: getCategoryForClass($(item).attr('data-filtro')),
             url: $(item).find('a').attr('href'),
@@ -17,7 +18,12 @@ fetchData(url).then((res) => {
         })
     })
 
-    associados.forEach((item) => console.log(item))
+ 
+    const csv = new ObjectsToCsv(associados);
+    
+
+    csv.toDisk('./abeeolica.csv');
+       
 })
 
 async function fetchData(url){
